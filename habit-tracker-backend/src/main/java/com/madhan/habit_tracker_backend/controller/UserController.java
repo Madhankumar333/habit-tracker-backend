@@ -1,7 +1,10 @@
 package com.madhan.habit_tracker_backend.controller;
 
+import com.madhan.habit_tracker_backend.dto.UserRequestDTO;
+import com.madhan.habit_tracker_backend.dto.UserResponseDTO;
 import com.madhan.habit_tracker_backend.model.User;
 import com.madhan.habit_tracker_backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +21,10 @@ public class UserController {
 
     // CREATE USER
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public UserResponseDTO createUser(@RequestBody @Valid UserRequestDTO request) {
+        return userService.createUser(request);
     }
+
 
     // GET ALL USERS
     @GetMapping

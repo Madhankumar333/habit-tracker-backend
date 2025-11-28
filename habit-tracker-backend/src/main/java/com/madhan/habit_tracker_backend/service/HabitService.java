@@ -1,5 +1,7 @@
 package com.madhan.habit_tracker_backend.service;
 
+import com.madhan.habit_tracker_backend.dto.HabitRequestDTO;
+import com.madhan.habit_tracker_backend.dto.HabitResponseDTO;
 import com.madhan.habit_tracker_backend.model.Habit;
 import com.madhan.habit_tracker_backend.model.User;
 import com.madhan.habit_tracker_backend.repository.HabitRepository;
@@ -20,17 +22,31 @@ public class HabitService {
         this.userRepository = userRepository;
     }
 
-    // Create habit for a user
-    public Habit createHabit(Long userId, Habit habit) {
+    public HabitResponseDTO createHabit(Long userId, HabitRequestDTO request) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        habit.setUser(user);
-        habit.setCreatedAt(LocalDateTime.now());
+        Habit habit = Habit.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .category(request.getCategory())
+                .createdAt(LocalDateTime.now())
+                .user(user)
+                .build();
 
-        return habitRepository.save(habit);
+        Habit saved = habitRepository.save(habit);
+
+        return HabitResponseDTO.builder()
+                .id(saved.getId())
+                .title(saved.getTitle())
+                .description(saved.getDescription())
+                .category(saved.getCategory())
+                .createdAt(saved.getCreatedAt().toString())
+                .userId(userId)
+                .build();
     }
+// Create habit for a user
 
     // Get all habits of a user
     public List<Habit> getHabitsByUser(Long userId) {
