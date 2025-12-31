@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/logs")
+@CrossOrigin(origins = "*") // allow frontend calls
 public class HabitLogController {
 
     private final HabitLogService habitLogService;
@@ -16,13 +17,11 @@ public class HabitLogController {
         this.habitLogService = habitLogService;
     }
 
-    // MARK HABIT AS COMPLETED OR SKIPPED
     @PostMapping("/habit/{habitId}")
     public HabitLog markHabit(@PathVariable Long habitId, @RequestParam String status) {
         return habitLogService.markHabit(habitId, status);
     }
 
-    // GET LOGS FOR A HABIT
     @GetMapping("/habit/{habitId}")
     public List<HabitLog> getLogs(@PathVariable Long habitId) {
         return habitLogService.getLogs(habitId);
